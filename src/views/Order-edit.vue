@@ -58,7 +58,7 @@ export default {
     },
     saveOrder() {
       this.$store.dispatch({ type: "saveOrder", orderToSave: this.orderToEdit });
-      this.$router.push("/orders");
+      this.$router.push("/");
     },
   },
 };

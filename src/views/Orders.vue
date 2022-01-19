@@ -1,5 +1,6 @@
 <template>
   <section class="orders-page" v-if="orders">
+    <user-msg></user-msg>
     <table id="responsive-data-table" class="dt-responsive nowrap sortable" cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -23,6 +24,8 @@
 <script>
 import ordersList from "../components/orders-list.vue";
 import { orderService } from "../services/orders.service";
+import userMsg from '../components/show-msg.vue'
+// import { showMsg } from '../services/event-bus.service.js'
 export default {
   data() {
     return {
@@ -69,12 +72,13 @@ export default {
     },
     addOrder() {
       const emptyOrder = orderService.getEmptyOrder();
-      this.$store.dispatch({ type: "orderToEdit", orderToEdit: emptyOrder });
+      this.$store.dispatch({ type: "addOrder", orderToEdit: emptyOrder })
       this.$router.push(`/orderEdit/${emptyOrder.order_ID}`);
     },
   },
   components: {
     ordersList,
+    userMsg
   },
 };
 </script>

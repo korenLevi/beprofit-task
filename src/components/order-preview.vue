@@ -8,7 +8,7 @@
       <button class="button-icon" @click="removeOrder(order.order_ID)">
         <span title="Remove" class="material-icons-outlined">delete</span>
       </button>
-
+ 
       <button class="button-icon" @click="editOrder(order)">
         <span title="Edit" class="material-icons-outlined">edit</span>
       </button>
@@ -30,6 +30,7 @@ export default {
         key: "",
         isAsc: false,
       },
+      isLoading: false
     };
   },
   methods: {
@@ -41,12 +42,15 @@ export default {
       this.sort.key = key;
     },
     editOrder(order) {
-      this.$store.dispatch({ type: "orderToEdit", orderToEdit: order });
-      this.$router.push(`/orderEdit/${order.order_ID}`);
+      this.$store.dispatch({ type: "orderToEdit", orderId: order.order_ID })
+      .then(res => {
+        this.$router.push(`/orderEdit/${res.order_ID}`);
+      })
     },
     removeOrder(orderId) {
       this.$store.dispatch({ type: "removeOrder", orderId });
     },
   },
+ 
 };
 </script>

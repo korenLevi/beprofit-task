@@ -1,13 +1,23 @@
 import { expect } from 'chai'
 import { shallowMount } from '@vue/test-utils'
-import HelloWorld from '@/components/HelloWorld.vue'
+import ordersList from '@/components/orders-list.vue'
+import orderPreview from '@/components/order-preview.vue'
 
-describe('HelloWorld.vue', () => {
-  it('renders props.msg when passed', () => {
-    const msg = 'new message'
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
+// describe('orders-list.vue', () => {
+//   it('renders props.orders when passed', () => {
+//     const orders = require('../../src/services/orders.json')
+//     const wrapper = shallowMount(ordersList, {
+//       propsData: { orders }
+//     })
+//     expect(wrapper.props('orders')).to.include(orders)
+//   })
+// })
+describe('order-preview.vue', () => {
+  it('renders props.orders when passed', () => {
+    const order = require('../../src/services/orderTest.json')
+    const wrapper = shallowMount(orderPreview, {
+      propsData: { order }
     })
-    expect(wrapper.text()).to.include(msg)
+    expect(wrapper.props('order')).to.include(order)
   })
 })

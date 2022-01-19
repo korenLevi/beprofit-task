@@ -1,47 +1,69 @@
-
+// import axios from 'axios';
+import {httpService}  from './httpService'
 export const orderService = {
     query,
     getOrderById,
     saveOrder,
     removeOrder,
-    getEmptyOrder
+    getEmptyOrder,
+
 }
 const orders = require('./orders.json')
+const URL = 'https://www.become.co/api/rest/test.php';
 
 function query() {
     return orders;
 }
 
-function getOrderById(id) {
-    const orderIdx = orders.findIndex(order => order.order_ID == id)
-    if (orderIdx > -1) return orders[orderIdx];
-    console.log('Error while getting order with id: ', id);
+async function getOrderById(id) {
+    try{
+        const res = await httpService.get(URL)
+        if(!res.success) throw res
+        const orderIdx = orders.findIndex(order => order.order_ID == id)
+        if (orderIdx > -1) return orders[orderIdx];
+    }catch(err){
+        console.log('Had Error while getting order',err)
+        throw err
+    }
 }
 
-function saveOrder(orderToSave){
-    if(!orderToSave) return
-    const orders = query()
-    const orderIdx = orders.findIndex(order => order.order_ID == orderToSave.order_ID)
-    if(orderIdx > -1) orders[orderIdx] = orderToSave;
-    else orders.push(orderToSave)
-    return orders;
+async function saveOrder(orderToSave) {
+    try{
+        if (!orderToSave) return
+        const res = await httpService.post(URL)
+        if(!res.success) throw res
+        const orderIdx = orders.findIndex(order => order.order_ID == orderToSave.order_ID)
+        if (orderIdx > -1) orders[orderIdx] = orderToSave;
+        else orders.push(orderToSave)
+        return orders;
+    }catch(err){
+        console.log('Had Error while saving order',err)
+        throw err
+    }
 }
 
-function removeOrder(id){
-    const orders = query()
-    const orderIdx = orders.findIndex(order => order.order_ID == id)
-    orders.splice(orderIdx, 1)
-    return orders;
+ async function removeOrder(id) {
+    try{
+        const res = await httpService.delete(URL)
+        if(!res.success) throw res
+        const orderIdx = orders.findIndex(order => order.order_ID == id)
+        orders.splice(orderIdx, 1)
+        return orders;
+    }catch(err){
+        console.log('Had Error while removing order',err);
+        throw err
+    }
 }
-function getEmptyOrder(){
+
+function getEmptyOrder() {
     let keys = Object.getOwnPropertyNames(orders[0])
     let obj = {}
-    for(let key in keys){
+    for (let key in keys) {
         obj[keys[key]] = null
     }
     let newDate = new Date()
     obj['order_ID'] = _makeId(10)
-    obj['created_at'] =newDate.toISOString().split('T')[0] + ' ' + new Date().toISOString().substr(11, 8);
+    obj['created_at'] = newDate.toISOString().split('T')[0] + ' ' + new Date().toISOString().substr(11, 8);
     return obj
 }
 
@@ -53,3 +75,4 @@ function _makeId(length = 5) {
     }
     return txt
 }
+
